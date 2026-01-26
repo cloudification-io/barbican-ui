@@ -1,6 +1,3 @@
 sphinx>=8.1.3 # BSD
 openstackdocstheme>=3.5.0 # Apache-2.0
 reno>=4.1.0 # Apache-2.0
-
-# The below is rewquired to build testing module reference
-mock>=2.0.0 # BSD
