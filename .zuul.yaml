@@ -1,4 +1,0 @@
-- project:
-    queue: barbican
-    templates:
-      - publish-openstack-docs-pti
