@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Order Details" %}{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=page_title %}
+{% endblock page_header %}
+
+{% block main %}
+<div class="row">
+  <div class="col-sm-12">
+    <ol class="breadcrumb">
+      <li><a href="{{ url }}">{% trans "Orders" %}</a></li>
+      <li class="active">{% trans "Order Details" %}</li>
+    </ol>
+
+    {% if order %}
+    <div class="detail">
+      <table class="table table-striped table-bordered detail-table">
+        <colgroup>
+          <col style="width:22%">
+          <col style="width:78%">
+        </colgroup>
+        <tbody>
+          <tr>
+            <th>{% trans "Order Ref" %}</th>
+            <td>
+              <code class="text-muted" style="word-break:break-all;">
+                {{ order.order_ref }}
+              </code>
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans "Type" %}</th>
+            <td>{{ order_type|default:"—" }}</td>
+          </tr>
+          <tr>
+            <th>{% trans "Status" %}</th>
+            <td>
+              {% if order.status == "ACTIVE" %}
+                <span class="label label-success">{{ order.status }}</span>
+              {% elif order.status == "PENDING" %}
+                <span class="label label-warning">{{ order.status }}</span>
+              {% elif order.status == "ERROR" %}
+                <span class="label label-danger">{{ order.status }}</span>
+              {% else %}
+                <span class="label label-default">{{ order.status|default:"—" }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans "Generated Secret" %}</th>
+            <td>
+              {% if order.secret_ref %}
+                <code class="text-muted" style="word-break:break-all;">
+                  {{ order.secret_ref }}
+                </code>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{% trans "Error Code" %}</th>
+            <td>{{ order.error_status_code|default:"—" }}</td>
+          </tr>
+          <tr>
+            <th>{% trans "Error Reason" %}</th>
+            <td>{{ order.error_reason|default:"—" }}</td>
+          </tr>
+          <tr>
+            <th>{% trans "Created" %}</th>
+            <td>{{ order.created|default:"—" }}</td>
+          </tr>
+          <tr>
+            <th>{% trans "Updated" %}</th>
+            <td>{{ order.updated|default:"—" }}</td>
+          </tr>
+          {% if order.meta %}
+          <tr>
+            <th>{% trans "Request Metadata" %}</th>
+            <td>
+              <table class="table table-condensed" style="margin:0;">
+                <tbody>
+                  {% for k, v in order.meta.items %}
+                  <tr>
+                    <td style="width:30%;border-top:none;">
+                      <code>{{ k }}</code>
+                    </td>
+                    <td style="border-top:none;">{{ v }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

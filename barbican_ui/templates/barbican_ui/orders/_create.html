@@ -1,0 +1,18 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% block modal-body-right %}
+  <h3>{% trans "Description" %}</h3>
+  <p>{% blocktrans trimmed %}
+    An <strong>order</strong> asks Barbican to <em>generate</em> a secret
+    on your behalf using a back-end plugin (e.g. an HSM or software RNG).
+  {% endblocktrans %}</p>
+  <h3>{% trans "Order Types" %}</h3>
+  <ul>
+    <li><strong>{% trans "Symmetric Key" %}</strong> &mdash; {% trans "Generate an AES, 3DES, or HMAC key." %}</li>
+    <li><strong>{% trans "Asymmetric Key Pair" %}</strong> &mdash; {% trans "Generate an RSA, EC, or DSA key pair." %}</li>
+  </ul>
+  <div class="alert alert-info" style="margin-top:10px;">
+    <i class="fa fa-info-circle"></i>
+    {% trans "Orders are asynchronous. Refresh the Orders list to check status." %}
+  </div>
+{% endblock %}
