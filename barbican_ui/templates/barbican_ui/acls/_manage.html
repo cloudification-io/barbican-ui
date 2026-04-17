@@ -1,0 +1,29 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block modal-body-right %}
+  <h3>{% trans "About ACLs" %}</h3>
+  <p>{% blocktrans trimmed %}
+    Barbican Access Control Lists (ACLs) let you grant or restrict access
+    to a secret or container beyond the default project-level policy.
+  {% endblocktrans %}</p>
+
+  <h3>{% trans "Project Access" %}</h3>
+  <p>{% blocktrans trimmed %}
+    When <strong>Allow Project-Wide Access</strong> is enabled, any
+    authenticated member of the current project can read this resource.
+    Disable it to restrict access to only the users listed below.
+  {% endblocktrans %}</p>
+
+  <h3>{% trans "User IDs" %}</h3>
+  <p>{% blocktrans trimmed %}
+    Enter one Keystone user UUID per line. These users are granted explicit
+    read access regardless of the project-wide setting.
+    Leave blank to clear per-user grants.
+  {% endblocktrans %}</p>
+
+  <div class="alert alert-warning" style="margin-top:10px;">
+    <i class="fa fa-exclamation-triangle"></i>
+    {% trans "Saving replaces the current ACL entirely." %}
+  </div>
+{% endblock %}
