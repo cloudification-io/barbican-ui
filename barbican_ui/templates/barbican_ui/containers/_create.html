@@ -1,0 +1,18 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% block modal-body-right %}
+  <h3>{% trans "Description" %}</h3>
+  <p>{% blocktrans trimmed %}
+    A <strong>container</strong> groups related secrets together.
+  {% endblocktrans %}</p>
+  <h3>{% trans "Container Types" %}</h3>
+  <ul>
+    <li><strong>{% trans "Generic" %}</strong> &mdash; {% trans "Arbitrary named secret references." %}</li>
+    <li><strong>{% trans "Certificate" %}</strong> &mdash; {% trans "Certificate + private key + optional intermediates." %}</li>
+    <li><strong>{% trans "RSA" %}</strong> &mdash; {% trans "RSA public key + private key + optional passphrase." %}</li>
+  </ul>
+  <p class="text-info">
+    <i class="fa fa-info-circle"></i>
+    {% trans "All secret references must be full Barbican hrefs." %}
+  </p>
+{% endblock %}

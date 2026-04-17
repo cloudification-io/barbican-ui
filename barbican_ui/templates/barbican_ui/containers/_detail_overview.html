@@ -1,0 +1,46 @@
+{% load i18n %}
+
+<div class="detail">
+  <table class="table table-striped table-bordered detail-table">
+    <colgroup>
+      <col style="width:22%">
+      <col style="width:78%">
+    </colgroup>
+    <tbody>
+      <tr>
+        <th>{% trans "Name" %}</th>
+        <td>{{ container.name|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Container Ref" %}</th>
+        <td><code class="text-muted" style="word-break:break-all;">{{ container.container_ref }}</code></td>
+      </tr>
+      <tr>
+        <th>{% trans "Type" %}</th>
+        <td>{{ container.type|default:"generic" }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Status" %}</th>
+        <td>
+          {% if container.status == "ACTIVE" %}
+            <span class="label label-success">{{ container.status }}</span>
+          {% elif container.status == "PENDING" %}
+            <span class="label label-warning">{{ container.status }}</span>
+          {% elif container.status == "ERROR" %}
+            <span class="label label-danger">{{ container.status }}</span>
+          {% else %}
+            <span class="label label-default">{{ container.status|default:"—" }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "Created" %}</th>
+        <td>{{ container.created|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Updated" %}</th>
+        <td>{{ container.updated|default:"—" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
