@@ -1,0 +1,15 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% block modal-body-right %}
+  <h3>{% trans "Description" %}</h3>
+  <p>{% blocktrans trimmed %}
+    Store a PEM-encoded X.509 certificate as a Barbican secret with
+    <code>secret_type=certificate</code>.
+  {% endblocktrans %}</p>
+  <h3>{% trans "Notes" %}</h3>
+  <ul>
+    <li>{% trans "Paste the full PEM block including BEGIN/END markers." %}</li>
+    <li>{% trans "For private keys, use the Secrets panel instead." %}</li>
+    <li>{% trans "To generate via CA plugin, use the Orders panel." %}</li>
+  </ul>
+{% endblock %}

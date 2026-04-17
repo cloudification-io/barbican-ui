@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Store Certificate" %}{% endblock %}
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=page_title %}
+{% endblock page_header %}
+{% block main %}
+  {% include "barbican_ui/certificates/_create.html" %}
+{% endblock %}

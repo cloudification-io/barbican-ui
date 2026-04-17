@@ -1,0 +1,76 @@
+{% load i18n %}
+
+<div class="detail">
+  <table class="table table-striped table-bordered detail-table">
+    <colgroup>
+      <col style="width:22%">
+      <col style="width:78%">
+    </colgroup>
+    <tbody>
+      <tr>
+        <th>{% trans "Name" %}</th>
+        <td>{{ certificate.name|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Secret Ref" %}</th>
+        <td>
+          <code class="text-muted" style="word-break:break-all;">
+            {{ certificate.secret_ref }}
+          </code>
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "Secret Type" %}</th>
+        <td>{{ certificate.secret_type|default:"certificate" }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Status" %}</th>
+        <td>
+          {% if certificate.status == "ACTIVE" %}
+            <span class="label label-success">{{ certificate.status }}</span>
+          {% elif certificate.status == "PENDING" %}
+            <span class="label label-warning">{{ certificate.status }}</span>
+          {% elif certificate.status == "ERROR" %}
+            <span class="label label-danger">{{ certificate.status }}</span>
+          {% else %}
+            <span class="label label-default">{{ certificate.status|default:"—" }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "Content Types" %}</th>
+        <td>
+          {% if certificate.content_types %}
+            <ul class="list-unstyled" style="margin:0;">
+              {% for k, v in certificate.content_types.items %}
+                <li><strong>{{ k }}:</strong> {{ v }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "Expiration" %}</th>
+        <td>{{ certificate.expiration|default:_("Never") }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Created" %}</th>
+        <td>{{ certificate.created|default:"—" }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "Updated" %}</th>
+        <td>{{ certificate.updated|default:"—" }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:12px;">
+    {# certificate_id (UUID) is passed explicitly from DetailView.get_context_data #}
+    <a href="{% url 'horizon:project:barbican_certificates:download' certificate_id %}"
+       class="btn btn-default btn-sm">
+      <i class="fa fa-download"></i> {% trans "Download PEM" %}
+    </a>
+  </div>
+</div>
