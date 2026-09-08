@@ -48,7 +48,7 @@ def _barbican_endpoint(request):
     return endpoint
 
 
-def barbianclient(request):
+def barbicanclient(request):
     """Return a barbicanclient.Client using Horizon's token."""
 
     insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
@@ -62,7 +62,7 @@ def barbianclient(request):
         return None
 
     LOG.debug(
-        'barbianclient connection created using token "%s" and url "%s"',
+        'barbicanclient connection created using token "%s" and url "%s"',
         request.user.token.id,
         barbican_url,
     )
@@ -113,12 +113,12 @@ def build_ref(request, resource, uuid):
 
 def secret_list(request, **kwargs):
     """Return a list of Secret objects for the current project."""
-    return list(barbianclient(request).secrets.list(**kwargs))
+    return list(barbicanclient(request).secrets.list(**kwargs))
 
 
 def secret_get(request, secret_ref):
     """Return a single Secret by its full href."""
-    return barbianclient(request).secrets.get(secret_ref)
+    return barbicanclient(request).secrets.get(secret_ref)
 
 
 def secret_create(request, name=None, payload=None,
@@ -127,7 +127,7 @@ def secret_create(request, name=None, payload=None,
                   algorithm=None, bit_length=None, mode=None,
                   secret_type='opaque', expiration=None):
     """Store a new secret and return its href."""
-    c = barbianclient(request)
+    c = barbicanclient(request)
     s = c.secrets.create(
         name=name,
         payload=payload,
@@ -144,17 +144,17 @@ def secret_create(request, name=None, payload=None,
 
 def secret_delete(request, secret_ref):
     """Delete a secret by its full href."""
-    barbianclient(request).secrets.delete(secret_ref)
+    barbicanclient(request).secrets.delete(secret_ref)
 
 
 def secret_get_payload(request, secret_ref):
     """Retrieve and return the decrypted payload of a secret."""
-    return barbianclient(request).secrets.get(secret_ref).payload
+    return barbicanclient(request).secrets.get(secret_ref).payload
 
 
 def secret_metadata_get(request, secret_ref):
     """Return the metadata dict for a secret (empty dict if none)."""
-    s = barbianclient(request).secrets.get(secret_ref)
+    s = barbicanclient(request).secrets.get(secret_ref)
     return getattr(s, 'metadata', None) or {}
 
 
@@ -164,18 +164,18 @@ def secret_metadata_get(request, secret_ref):
 
 def container_list(request, **kwargs):
     """Return a list of Container objects for the current project."""
-    return list(barbianclient(request).containers.list(**kwargs))
+    return list(barbicanclient(request).containers.list(**kwargs))
 
 
 def container_get(request, container_ref):
     """Return a single Container by its full href."""
-    return barbianclient(request).containers.get(container_ref)
+    return barbicanclient(request).containers.get(container_ref)
 
 
 def container_create(request, container_type='generic',
                      name=None, secrets=None):
     """Create a container and return its href."""
-    c = barbianclient(request)
+    c = barbicanclient(request)
     secrets = secrets or {}
 
     if container_type == 'certificate':
@@ -218,7 +218,7 @@ def container_secret_refs(container):
 
 def container_delete(request, container_ref):
     """Delete a container by its full href."""
-    barbianclient(request).containers.delete(container_ref)
+    barbicanclient(request).containers.delete(container_ref)
 
 
 # ---------------------------------------------------------------------------
@@ -227,27 +227,27 @@ def container_delete(request, container_ref):
 
 def order_list(request, **kwargs):
     """Return a list of Order objects for the current project."""
-    return list(barbianclient(request).orders.list(**kwargs))
+    return list(barbicanclient(request).orders.list(**kwargs))
 
 
 def order_get(request, order_ref):
     """Return a single Order by its full href."""
-    return barbianclient(request).orders.get(order_ref)
+    return barbicanclient(request).orders.get(order_ref)
 
 
 def order_create_key(request, **kwargs):
     """Submit a symmetric key generation order and return its href."""
-    return barbianclient(request).orders.create_key(**kwargs).submit()
+    return barbicanclient(request).orders.create_key(**kwargs).submit()
 
 
 def order_create_asymmetric(request, **kwargs):
     """Submit an asymmetric key pair order and return its href."""
-    return barbianclient(request).orders.create_asymmetric(**kwargs).submit()
+    return barbicanclient(request).orders.create_asymmetric(**kwargs).submit()
 
 
 def order_delete(request, order_ref):
     """Delete an order by its full href."""
-    barbianclient(request).orders.delete(order_ref)
+    barbicanclient(request).orders.delete(order_ref)
 
 
 # ---------------------------------------------------------------------------
@@ -267,7 +267,7 @@ def acl_get(request, entity_ref):
         Defaults to {'users': [], 'project_access': True} on any error
         or when no ACL has been set yet.
     """
-    c = barbianclient(request)
+    c = barbicanclient(request)
     try:
         acl_list = c.acls.get(entity_ref)
         read_acl = getattr(acl_list, 'read', None)
@@ -301,7 +301,7 @@ def acl_submit(request, entity_ref, users=None,
     :param project_access:  True = all project members can perform operation.
     :param operation_type:  Which operation to set ACL for (default: 'read').
     """
-    c = barbianclient(request)
+    c = barbicanclient(request)
     acl_list = c.acls.get(entity_ref)
 
     # Check whether an ACLEntity already exists for this operation
@@ -325,6 +325,6 @@ def acl_submit(request, entity_ref, users=None,
 
 def acl_delete(request, entity_ref):
     """Remove all ACL entries from a secret or container."""
-    c = barbianclient(request)
+    c = barbicanclient(request)
     acl_list = c.acls.get(entity_ref)
     acl_list.remove()
