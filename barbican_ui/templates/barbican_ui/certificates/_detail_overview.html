@@ -67,7 +67,6 @@
   </table>
 
   <div style="margin-top:12px;">
-    {# certificate_id (UUID) is passed explicitly from DetailView.get_context_data #}
     <a href="{% url 'horizon:project:barbican_certificates:download' certificate_id %}"
        class="btn btn-default btn-sm">
       <i class="fa fa-download"></i> {% trans "Download PEM" %}

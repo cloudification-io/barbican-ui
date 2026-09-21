@@ -18,7 +18,10 @@ class OverviewTab(tabs.Tab):
     template_name = 'barbican_ui/certificates/_detail_overview.html'
 
     def get_context_data(self, request):
-        return {'certificate': self.tab_group.kwargs['certificate']}
+        return {
+            'certificate': self.tab_group.kwargs['certificate'],
+            'certificate_id': self.tab_group.kwargs['certificate_id'],
+        }
 
 
 class CertificateDetailTabs(tabs.TabGroup):
