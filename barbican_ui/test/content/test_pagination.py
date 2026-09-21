@@ -103,3 +103,49 @@ def test_certificates_are_filtered_by_barbican(settings):
 
     secret_list.assert_called_once_with(
         view.request, limit=4, offset=0, secret_type='certificate')
+
+
+def _pages(pages):
+    def secret_list(request, limit, offset):
+        return _rows(pages.get(offset, 0))
+    return secret_list
+
+
+def test_an_empty_page_shows_the_previous_page(settings):
+    settings.BARBICAN_DEFAULT_PAGE_SIZE = 3
+    view = _view(secret_views.IndexView, '?marker=6')
+
+    with mock.patch.object(secret_views.barbican, 'secret_list',
+                           side_effect=_pages({3: 3})) as secret_list:
+        data = view.get_data()
+
+    assert [c.kwargs['offset'] for c in secret_list.call_args_list] == [6, 3]
+    assert len(data) == 3
+    assert view.has_prev_data(None) is True
+    table = secret_tables.SecretsTable(view.request, data=data)
+    assert (table.get_prev_marker(), table.get_marker()) == ('0', '6')
+
+
+def test_a_marker_far_past_the_end_shows_the_first_page(settings):
+    settings.BARBICAN_DEFAULT_PAGE_SIZE = 3
+    view = _view(secret_views.IndexView, '?marker=300')
+
+    with mock.patch.object(secret_views.barbican, 'secret_list',
+                           side_effect=_pages({0: 2})) as secret_list:
+        data = view.get_data()
+
+    assert [c.kwargs['offset'] for c in secret_list.call_args_list] == [
+        300, 297, 0]
+    assert len(data) == 2
+    assert view.has_prev_data(None) is False
+
+
+def test_an_empty_first_page_is_not_retried(settings):
+    settings.BARBICAN_DEFAULT_PAGE_SIZE = 3
+    view = _view(secret_views.IndexView)
+
+    with mock.patch.object(secret_views.barbican, 'secret_list',
+                           side_effect=_pages({})) as secret_list:
+        assert view.get_data() == []
+
+    assert secret_list.call_count == 1

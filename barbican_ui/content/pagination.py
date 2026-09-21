@@ -11,8 +11,7 @@
 
 from django.conf import settings
 
-# Barbican caps limit at max_limit_paging (100); one row is fetched on top of
-# the page to detect a next page.
+# Barbican's max_limit_paging is 100; one extra row detects a next page.
 MAX_PAGE_SIZE = 99
 
 
@@ -22,6 +21,9 @@ def page_size():
 
 
 def _offset(request, meta):
+    effective = getattr(request, '_barbican_ui_offset', None)
+    if effective is not None:
+        return effective
     raw = (request.GET.get(meta.prev_pagination_param) or
            request.GET.get(meta.pagination_param))
     try:
@@ -51,6 +53,14 @@ class OffsetPagedView(object):
         offset = _offset(self.request, self.table_class._meta)
         items = list_func(self.request, limit=size + 1, offset=offset,
                           **filters)
+        # Horizon renders no paging links on an empty page.
+        for fallback in (max(offset - size, 0), 0):
+            if items or offset == 0:
+                break
+            offset = fallback
+            items = list_func(self.request, limit=size + 1, offset=offset,
+                              **filters)
+        self.request._barbican_ui_offset = offset
         self._has_more_data = len(items) > size
         self._has_prev_data = offset > 0
         return items[:size]
