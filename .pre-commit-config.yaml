@@ -1,0 +1,5 @@
+repos:
+  - repo: https://opendev.org/openstack/hacking
+    rev: 8.1.0
+    hooks:
+      - id: hacking

@@ -127,6 +127,13 @@ Running Tests
     # Coverage report
     tox -e cover
 
+The style checks can also run on every commit. Install
+`pre-commit <https://pre-commit.com/#install>`_, then enable it in the clone:
+
+.. code-block:: bash
+
+    pre-commit install
+
 DevStack
 --------
 
