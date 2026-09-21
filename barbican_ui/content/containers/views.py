@@ -19,6 +19,7 @@ from horizon import tables as horizon_tables
 from horizon import tabs as horizon_tabs
 
 from barbican_ui.api import barbican
+from barbican_ui.content import pagination
 from barbican_ui.content.containers import forms
 from barbican_ui.content.containers import tables
 from barbican_ui.content.containers import tabs as container_tabs
@@ -26,14 +27,15 @@ from barbican_ui.content.containers import tabs as container_tabs
 LOG = logging.getLogger(__name__)
 
 
-class IndexView(horizon_tables.DataTableView):
+class IndexView(pagination.OffsetPagedView,
+                horizon_tables.DataTableView):
     table_class = tables.ContainersTable
     template_name = 'barbican_ui/containers/index.html'
     page_title = _('Containers')
 
     def get_data(self):
         try:
-            return barbican.container_list(self.request)
+            return self.paginate(barbican.container_list)
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve containers.'))

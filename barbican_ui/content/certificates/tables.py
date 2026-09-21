@@ -16,6 +16,7 @@ from django.utils.translation import ngettext_lazy
 from horizon import tables
 
 from barbican_ui.api import barbican
+from barbican_ui.content import pagination
 
 LOG = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ class CertificateFilterAction(tables.FilterAction):
     filterparam = 'filter_certs'
 
 
-class CertificatesTable(tables.DataTable):
+class CertificatesTable(pagination.OffsetPagedTable, tables.DataTable):
 
     name = tables.Column(
         'name',

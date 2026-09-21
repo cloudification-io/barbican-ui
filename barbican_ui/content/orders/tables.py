@@ -16,6 +16,7 @@ from django.utils.translation import ngettext_lazy
 from horizon import tables
 
 from barbican_ui.api import barbican
+from barbican_ui.content import pagination
 
 LOG = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ class OrderFilterAction(tables.FilterAction):
     filterparam = 'filter_orders'
 
 
-class OrdersTable(tables.DataTable):
+class OrdersTable(pagination.OffsetPagedTable, tables.DataTable):
 
     order_type = tables.Column(
         '_type',

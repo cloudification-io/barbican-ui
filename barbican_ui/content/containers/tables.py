@@ -16,6 +16,7 @@ from django.utils.translation import ngettext_lazy
 from horizon import tables
 
 from barbican_ui.api import barbican
+from barbican_ui.content import pagination
 
 LOG = logging.getLogger(__name__)
 
@@ -99,7 +100,7 @@ class ContainerFilterAction(tables.FilterAction):
     filterparam = 'filter_containers'
 
 
-class ContainersTable(tables.DataTable):
+class ContainersTable(pagination.OffsetPagedTable, tables.DataTable):
 
     name = tables.Column(
         'name',

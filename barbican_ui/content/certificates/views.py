@@ -21,6 +21,7 @@ from horizon import tables as horizon_tables
 from horizon import tabs as horizon_tabs
 
 from barbican_ui.api import barbican
+from barbican_ui.content import pagination
 from barbican_ui.content.certificates import forms
 from barbican_ui.content.certificates import tables
 from barbican_ui.content.certificates import tabs as cert_tabs
@@ -28,7 +29,8 @@ from barbican_ui.content.certificates import tabs as cert_tabs
 LOG = logging.getLogger(__name__)
 
 
-class IndexView(horizon_tables.DataTableView):
+class IndexView(pagination.OffsetPagedView,
+                horizon_tables.DataTableView):
     """List all secrets whose secret_type == 'certificate'."""
 
     table_class = tables.CertificatesTable
@@ -37,10 +39,8 @@ class IndexView(horizon_tables.DataTableView):
 
     def get_data(self):
         try:
-            return [
-                s for s in barbican.secret_list(self.request)
-                if getattr(s, 'secret_type', None) == 'certificate'
-            ]
+            return self.paginate(barbican.secret_list,
+                                 secret_type='certificate')
         except Exception:
             exceptions.handle(self.request,
                               _('Unable to retrieve certificates.'))
