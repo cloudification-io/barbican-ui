@@ -17,4 +17,4 @@ class Secrets(horizon.Panel):
     slug = 'barbican_secrets'
     icon = 'fa-key'
     permissions = ('openstack.services.key-manager',)
-    policy_rules = (('key-manager', 'secret:get'),)
+    policy_rules = (('key-manager', 'secrets:get'),)

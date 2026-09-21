@@ -17,4 +17,4 @@ class Certificates(horizon.Panel):
     slug = 'barbican_certificates'
     icon = 'fa-certificate'
     permissions = ('openstack.services.key-manager',)
-    policy_rules = (('key-manager', 'secret:get'),)
+    policy_rules = (('key-manager', 'secrets:get'),)

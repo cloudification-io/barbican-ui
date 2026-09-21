@@ -31,7 +31,7 @@ class CreateOrder(tables.LinkAction):
 
 class DeleteOrder(tables.DeleteAction):
     help_text = _('Deleted orders cannot be recovered.')
-    policy_rules = (('key-manager', 'orders:delete'),)
+    policy_rules = (('key-manager', 'order:delete'),)
 
     @staticmethod
     def action_present(count):

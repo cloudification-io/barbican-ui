@@ -60,7 +60,7 @@ class CreateContainer(tables.LinkAction):
 
 class DeleteContainer(tables.DeleteAction):
     help_text = _('Deleted containers cannot be recovered.')
-    policy_rules = (('key-manager', 'containers:delete'),)
+    policy_rules = (('key-manager', 'container:delete'),)
 
     @staticmethod
     def action_present(count):
@@ -82,7 +82,7 @@ class ManageACL(tables.LinkAction):
     url = 'horizon:project:barbican_containers:acl'
     classes = ('ajax-modal',)
     icon = 'lock'
-    policy_rules = (('key-manager', 'containers:get'),)
+    policy_rules = (('key-manager', 'container_acls:put_patch'),)
 
     def get_link_url(self, container):
         uuid = barbican.ref_to_uuid(container.container_ref)

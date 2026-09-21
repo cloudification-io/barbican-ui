@@ -26,7 +26,7 @@ class CreateSecret(tables.LinkAction):
     url = 'horizon:project:barbican_secrets:create'
     classes = ('ajax-modal',)
     icon = 'plus'
-    policy_rules = (('key-manager', 'secret:post'),)
+    policy_rules = (('key-manager', 'secrets:post'),)
 
 
 class DeleteSecret(tables.DeleteAction):
@@ -64,7 +64,7 @@ class ManageACL(tables.LinkAction):
     verbose_name = _('Manage ACL')
     classes = ('ajax-modal',)
     icon = 'lock'
-    policy_rules = (('key-manager', 'secret:get'),)
+    policy_rules = (('key-manager', 'secret_acls:put_patch'),)
 
     def get_link_url(self, secret):
         uuid = barbican.ref_to_uuid(secret.secret_ref)

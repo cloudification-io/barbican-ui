@@ -26,7 +26,7 @@ class StoreCertificate(tables.LinkAction):
     url = 'horizon:project:barbican_certificates:create'
     classes = ('ajax-modal',)
     icon = 'plus'
-    policy_rules = (('key-manager', 'secret:post'),)
+    policy_rules = (('key-manager', 'secrets:post'),)
 
 
 class DeleteCertificate(tables.DeleteAction):
