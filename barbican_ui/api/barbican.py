@@ -16,7 +16,6 @@ import logging
 
 from django.conf import settings
 
-from horizon import exceptions
 from openstack_dashboard.api import base
 
 from keystoneauth1.identity import v3 as ks_v3
@@ -38,7 +37,7 @@ def _barbican_endpoint(request):
     endpoint_type = getattr(settings, 'BARBICAN_ENDPOINT_TYPE', 'publicURL')
     try:
         endpoint = endpoint or base.url_for(
-            request, 'key-manager', endpoint_type=endpoint_type
+            request, BARBICAN_SERVICE_TYPE, endpoint_type=endpoint_type
         )
     except Exception:
         return None
@@ -51,13 +50,13 @@ def _barbican_endpoint(request):
 def barbicanclient(request):
     """Return a barbicanclient.Client using Horizon's token."""
 
-    insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
-    cacert = getattr(settings, 'OPENSTACK_SSL_CACERT', None)
+    insecure = (getattr(settings, 'BARBICAN_INSECURE', False) or
+                getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False))
+    cacert = (getattr(settings, 'BARBICAN_CACERT', None) or
+              getattr(settings, 'OPENSTACK_SSL_CACERT', None))
 
-    barbican_url = ''
-    try:
-        barbican_url = base.url_for(request, BARBICAN_SERVICE_TYPE)
-    except exceptions.ServiceCatalogException:
+    barbican_url = _barbican_endpoint(request)
+    if not barbican_url:
         LOG.debug('No key-manager service configured in the catalog.')
         return None
 
