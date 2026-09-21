@@ -60,11 +60,8 @@ def barbicanclient(request):
         LOG.debug('No key-manager service configured in the catalog.')
         return None
 
-    LOG.debug(
-        'barbicanclient connection created using token "%s" and url "%s"',
-        request.user.token.id,
-        barbican_url,
-    )
+    LOG.debug('barbicanclient connection created using url "%s"',
+              barbican_url)
 
     verify = False if insecure else (cacert or True)
 

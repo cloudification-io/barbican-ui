@@ -28,6 +28,17 @@ def _client(request):
     return session, client
 
 
+def test_barbicanclient_does_not_log_the_token():
+    request = _request_with_catalog([])
+    request.user.token.id = 'gAAAA-secret-token'
+
+    with mock.patch.object(barbican, 'LOG') as log:
+        _client(request)
+
+    assert log.debug.called
+    assert 'gAAAA-secret-token' not in repr(log.mock_calls)
+
+
 def test_barbicanclient_returns_none_when_key_manager_not_in_catalog(
         settings):
     settings.BARBICAN_ENDPOINT = None
