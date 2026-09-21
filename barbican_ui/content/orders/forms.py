@@ -181,7 +181,6 @@ class CreateOrderForm(forms.SelfHandlingForm):
                     name=data.get('name') or None,
                     algorithm=algorithm,
                     bit_length=bit_length or 2048,
-                    mode=data.get('mode') or None,
                     payload_content_type=payload_content_type,
                     expiration=expiration,
                 )
