@@ -68,7 +68,9 @@ class StoreCertificateForm(forms.SelfHandlingForm):
             return None
         for fmt in ('%Y-%m-%dT%H:%M:%S', '%Y-%m-%d'):
             try:
-                return datetime.datetime.strptime(value, fmt).isoformat()
+                return datetime.datetime.strptime(value, fmt).replace(
+                    tzinfo=datetime.timezone.utc
+                ).isoformat()
             except ValueError:
                 continue
         raise forms.ValidationError(

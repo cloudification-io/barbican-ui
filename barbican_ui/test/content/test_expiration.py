@@ -66,14 +66,16 @@ def _sent_expiration(form_class, data, typed):
     SECRET, CERTIFICATE, KEY_ORDER,
 ], ids=['secret', 'certificate', 'key-order'])
 @pytest.mark.parametrize('typed,expected', [
-    ('2030-01-02T03:04:05', datetime.datetime(2030, 1, 2, 3, 4, 5)),
-    ('2030-01-02', datetime.datetime(2030, 1, 2)),
+    ('2030-01-02T03:04:05', datetime.datetime(
+        2030, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc)),
+    ('2030-01-02', datetime.datetime(
+        2030, 1, 2, tzinfo=datetime.timezone.utc)),
 ])
 def test_expiration_reaches_barbican_as_utc(form_class, data, typed,
                                             expected):
     sent = _sent_expiration(form_class, data, typed)
 
-    assert sent == expected.replace(tzinfo=datetime.timezone.utc)
+    assert sent == expected
 
 
 @pytest.mark.parametrize('form_class,data', [
