@@ -81,5 +81,26 @@ def test_expiration_reaches_barbican_as_utc(form_class, data, typed,
 @pytest.mark.parametrize('form_class,data', [
     SECRET, CERTIFICATE, KEY_ORDER,
 ], ids=['secret', 'certificate', 'key-order'])
+@pytest.mark.parametrize('typed,cleaned', [
+    ('2030-01-02T03:04:05', '2030-01-02T03:04:05+00:00'),
+    ('2030-01-02', '2030-01-02T00:00:00+00:00'),
+])
+def test_cleaned_expiration_carries_the_utc_offset(form_class, data, typed,
+                                                   cleaned):
+    form = form_class(RequestFactory().post('/'),
+                      data=dict(data, expiration=typed))
+    assert form.is_valid(), form.errors
+
+    # The order form parses the expiration in handle(), not in a clean_ method
+    if form_class is order_forms.CreateOrderForm:
+        parsed = form._clean_expiration(form.cleaned_data['expiration'])
+    else:
+        parsed = form.cleaned_data['expiration']
+    assert parsed == cleaned
+
+
+@pytest.mark.parametrize('form_class,data', [
+    SECRET, CERTIFICATE, KEY_ORDER,
+], ids=['secret', 'certificate', 'key-order'])
 def test_a_blank_expiration_is_not_sent(form_class, data):
     assert _sent_expiration(form_class, data, '') is None
